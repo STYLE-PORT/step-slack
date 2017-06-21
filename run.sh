@@ -2,23 +2,23 @@
 #source build-esen.sh
 
 # check if slack webhook url is present
-if [ -z "$WERCKER_SLACK_NOTIFIER_URL" ]; then
+if [ -z "$WERCKER_SLACK_NOTIFIER_CUSTOM_URL" ]; then
   fail "Please provide a Slack webhook URL"
 fi
 
 # check if a '#' was supplied in the channel name
-if [ "${WERCKER_SLACK_NOTIFIER_CHANNEL:0:1}" = '#' ]; then
-  export WERCKER_SLACK_NOTIFIER_CHANNEL=${WERCKER_SLACK_NOTIFIER_CHANNEL:1}
+if [ "${WERCKER_SLACK_NOTIFIER_CUSTOM_CHANNEL:0:1}" = '#' ]; then
+  export WERCKER_SLACK_NOTIFIER_CUSTOM_CHANNEL=${WERCKER_SLACK_NOTIFIER_CUSTOM_CHANNEL:1}
 fi
 
 # if no username is provided use the default - werckerbot
-if [ -z "$WERCKER_SLACK_NOTIFIER_USERNAME" ]; then
-  export WERCKER_SLACK_NOTIFIER_USERNAME=werckerbot
+if [ -z "$WERCKER_SLACK_NOTIFIER_CUSTOM_USERNAME" ]; then
+  export WERCKER_SLACK_NOTIFIER_CUSTOM_USERNAME=werckerbot
 fi
 
 # if no icon-url is provided for the bot use the default wercker icon
-if [ -z "$WERCKER_SLACK_NOTIFIER_ICON_URL" ]; then
-  export WERCKER_SLACK_NOTIFIER_ICON_URL="https://secure.gravatar.com/avatar/a08fc43441db4c2df2cef96e0cc8c045?s=140"
+if [ -z "$WERCKER_SLACK_NOTIFIER_CUSTOM_ICON_URL" ]; then
+  export WERCKER_SLACK_NOTIFIER_CUSTOM_ICON_URL="https://secure.gravatar.com/avatar/a08fc43441db4c2df2cef96e0cc8c045?s=140"
 fi
 
 # check if this event is a build or deploy
@@ -46,13 +46,13 @@ fi
 json="{"
 
 # channels are optional, dont send one if it wasnt specified
-if [ -n "$WERCKER_SLACK_NOTIFIER_CHANNEL" ]; then
-    json=$json"\"channel\": \"#$WERCKER_SLACK_NOTIFIER_CHANNEL\","
+if [ -n "$WERCKER_SLACK_NOTIFIER_CUSTOM_CHANNEL" ]; then
+    json=$json"\"channel\": \"#$WERCKER_SLACK_NOTIFIER_CUSTOM_CHANNEL\","
 fi
 
 json=$json"
-    \"username\": \"$WERCKER_SLACK_NOTIFIER_USERNAME\",
-    \"icon_url\":\"$WERCKER_SLACK_NOTIFIER_ICON_URL\",
+    \"username\": \"$WERCKER_SLACK_NOTIFIER_CUSTOM_USERNAME\",
+    \"icon_url\":\"$WERCKER_SLACK_NOTIFIER_CUSTOM_ICON_URL\",
     \"attachments\":[
       {
         \"fallback\": \"$FALLBACK\",
@@ -63,21 +63,21 @@ json=$json"
 }"
 
 # skip notifications if not interested in passed builds or deploys
-if [ "$WERCKER_SLACK_NOTIFIER_NOTIFY_ON" = "failed" ]; then
+if [ "$WERCKER_SLACK_NOTIFIER_CUSTOM_NOTIFY_ON" = "failed" ]; then
 	if [ "$WERCKER_RESULT" = "passed" ]; then
 		return 0
 	fi
 fi
 
 # skip notifications if not on the right branch
-if [ -n "$WERCKER_SLACK_NOTIFIER_BRANCH" ]; then
-    if [ "$WERCKER_SLACK_NOTIFIER_BRANCH" != "$WERCKER_GIT_BRANCH" ]; then
+if [ -n "$WERCKER_SLACK_NOTIFIER_CUSTOM_BRANCH" ]; then
+    if [ "$WERCKER_SLACK_NOTIFIER_CUSTOM_BRANCH" != "$WERCKER_GIT_BRANCH" ]; then
         return 0
     fi
 fi
 
 # post the result to the slack webhook
-RESULT=$(curl -d "payload=$json" -s "$WERCKER_SLACK_NOTIFIER_URL" --output "$WERCKER_STEP_TEMP"/result.txt -w "%{http_code}")
+RESULT=$(curl -d "payload=$json" -s "$WERCKER_SLACK_NOTIFIER_CUSTOM_URL" --output "$WERCKER_STEP_TEMP"/result.txt -w "%{http_code}")
 cat "$WERCKER_STEP_TEMP/result.txt"
 
 if [ "$RESULT" = "500" ]; then
