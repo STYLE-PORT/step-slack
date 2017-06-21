@@ -53,13 +53,7 @@ fi
 json=$json"
     \"username\": \"$WERCKER_SLACK_NOTIFIER_CUSTOM_USERNAME\",
     \"icon_url\":\"$WERCKER_SLACK_NOTIFIER_CUSTOM_ICON_URL\",
-    \"attachments\":[
-      {
-        \"fallback\": \"$FALLBACK\",
-        \"text\": \"$MESSAGE\",
-        \"color\": \"$COLOR\"
-      }
-    ]
+    \"attachments\":$WERCKER_SLACK_NOTIFIER_CUSTOM_ATTACHMENTS
 }"
 
 # skip notifications if not interested in passed builds or deploys
