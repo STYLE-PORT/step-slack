@@ -1,5 +1,5 @@
 name: slack-notifier-custom
-version: 1.3.3
+version: 1.3.4
 description: Posts wercker build/deploy status to a Slack channel.
 keywords:
   - notification
