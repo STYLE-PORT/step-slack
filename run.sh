@@ -43,18 +43,18 @@ if [ "$WERCKER_RESULT" = "failed" ]; then
 fi
 
 # construct the json
-json='{'
+json="{"
 
 # channels are optional, dont send one if it wasnt specified
 if [ -n "$WERCKER_SLACK_NOTIFIER_CUSTOM_CHANNEL" ]; then
-    json=$json'"channel": "#$WERCKER_SLACK_NOTIFIER_CUSTOM_CHANNEL",'
+    json=$json"\"channel\": \"#$WERCKER_SLACK_NOTIFIER_CUSTOM_CHANNEL\","
 fi
 
-json=$json'
-    "username": "$WERCKER_SLACK_NOTIFIER_CUSTOM_USERNAME",
-    "icon_url": "$WERCKER_SLACK_NOTIFIER_CUSTOM_ICON_URL",
-    "attachments": $WERCKER_SLACK_NOTIFIER_CUSTOM_ATTACHMENTS
-}'
+json=$json"
+    \"username\": \"$WERCKER_SLACK_NOTIFIER_CUSTOM_USERNAME\",
+    \"icon_url\":\"$WERCKER_SLACK_NOTIFIER_CUSTOM_ICON_URL\",
+    \"attachments\": $WERCKER_SLACK_NOTIFIER_CUSTOM_ATTACHMENTS
+}"
 
 # skip notifications if not interested in passed builds or deploys
 if [ "$WERCKER_SLACK_NOTIFIER_CUSTOM_NOTIFY_ON" = "failed" ]; then
